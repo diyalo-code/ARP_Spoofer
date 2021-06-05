@@ -21,7 +21,7 @@ def get_arguments():
 
 
 def enable_prot_forwarding():
-    subprocess.call(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"])
+    subprocess.call(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"], stdout=subprocess.DEVNULL)
 
 
 def get_mac(ip):
@@ -65,6 +65,6 @@ try:
         time.sleep(2)
 
 except KeyboardInterrupt:
-    print("[+] Detected Ctrl + C \t Resetting ARP Tables.....")
+    print("\n[+] Detected Ctrl + C \t Resetting ARP Tables.....")
     restore(target_ip, gateway_ip)
     restore(gateway_ip, target_ip)
